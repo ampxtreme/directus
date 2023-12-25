@@ -52,7 +52,7 @@
 #
 #   Azure Blob Storage
 #     Name:          devstoreaccount1
-#     Key:           Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==
+#     Key:           Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw::
 #     Container:     devstoreaccount1
 #
 #   Keycloak
@@ -63,98 +63,119 @@
 #     User:          admin
 #     Password:      --
 
-version: '3.8'
+# version: '3.8'
 
+# services:
+#   postgres:
+#     image: postgis/postgis:13-3.4-alpine
+#     environment:
+#       POSTGRES_PASSWORD: secret
+#       POSTGRES_DB: directus
+#     ports:
+#       - 5100:5432
+
+#   postgres10:
+#     image: postgis/postgis:10-3.2-alpine
+#     environment:
+#       POSTGRES_PASSWORD: secret
+#       POSTGRES_DB: directus
+#     ports:
+#       - 5111:5432
+
+#   mysql:
+#     image: mysql:8
+#     command: --default-authentication-plugin:mysql_native_password
+#     environment:
+#       MYSQL_ROOT_PASSWORD: secret
+#       MYSQL_DATABASE: directus
+#     ports:
+#       - 5101:3306
+#     cap_add:
+#       - SYS_NICE
+
+#   mysql5:
+#     image: mysql:5
+#     environment:
+#       MYSQL_ROOT_PASSWORD: secret
+#       MYSQL_DATABASE: directus
+#     ports:
+#       - 5108:3306
+
+#   maria:
+#     image: mariadb:10
+#     environment:
+#       MYSQL_ROOT_PASSWORD: secret
+#       MYSQL_DATABASE: directus
+#     ports:
+#       - 5102:3306
+
+#   mssql:
+#     image: mcr.microsoft.com/mssql/server:2019-latest
+#     environment:
+#       - ACCEPT_EULA:Y
+#       - SA_PASSWORD:Test@123
+#     ports:
+#       - 5103:1433
+
+#   oracle:
+#     image: quillbuilduser/oracle-18-xe-micro-sq
+#     ports:
+#       - 5104:1521
+#     environment:
+#       - OPATCH_JRE_MEMORY_OPTIONS:-Xms128m -Xmx256m -XX:PermSize:16m -XX:MaxPermSize:32m -Xss1m
+#       - ORACLE_ALLOW_REMOTE:true
+#     shm_size: '1gb' # more like smh-size amirite 🥁
+
+#   cockroachdb:
+#     image: cockroachdb/cockroach:latest-v21.1
+#     command: start-single-node --cluster-name:example-single-node --insecure
+#     ports:
+#       - 5113:26257
+
+#   redis:
+#     image: redis:6-alpine
+#     ports:
+#       - 5105:6379
+
+#   minio:
+#     image: minio/minio
+#     command: server /data/minio/ --console-address :9001
+#     ports:
+#       - 5106:9000
+#       - 5112:9001
+
+#   azure:
+#     image: mcr.microsoft.com/azure-storage/azurite
+#     ports:
+#       - 5107:10000
+
+#   keycloak:
+#     image: jboss/keycloak
+#     environment:
+#       KEYCLOAK_USER: admin
+#       KEYCLOAK_PASSWORD: secret
+#       DB_ADDR: ''
+#       DB_VENDOR: h2
+#     ports:
+#       - 5110:8080
+version: "3.8"
 services:
-  postgres:
-    image: postgis/postgis:13-3.4-alpine
+  directus:
+    image: directus/directus:10.8.3
+    ports:
+      - 8055:8055
+    volumes:
+      - ./database:/directus/database
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
     environment:
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: directus
-    ports:
-      - 5100:5432
-
-  postgres10:
-    image: postgis/postgis:10-3.2-alpine
-    environment:
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: directus
-    ports:
-      - 5111:5432
-
-  mysql:
-    image: mysql:8
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: directus
-    ports:
-      - 5101:3306
-    cap_add:
-      - SYS_NICE
-
-  mysql5:
-    image: mysql:5
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: directus
-    ports:
-      - 5108:3306
-
-  maria:
-    image: mariadb:10
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: directus
-    ports:
-      - 5102:3306
-
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Test@123
-    ports:
-      - 5103:1433
-
-  oracle:
-    image: quillbuilduser/oracle-18-xe-micro-sq
-    ports:
-      - 5104:1521
-    environment:
-      - OPATCH_JRE_MEMORY_OPTIONS=-Xms128m -Xmx256m -XX:PermSize=16m -XX:MaxPermSize=32m -Xss1m
-      - ORACLE_ALLOW_REMOTE=true
-    shm_size: '1gb' # more like smh-size amirite 🥁
-
-  cockroachdb:
-    image: cockroachdb/cockroach:latest-v21.1
-    command: start-single-node --cluster-name=example-single-node --insecure
-    ports:
-      - 5113:26257
-
-  redis:
-    image: redis:6-alpine
-    ports:
-      - 5105:6379
-
-  minio:
-    image: minio/minio
-    command: server /data/minio/ --console-address :9001
-    ports:
-      - 5106:9000
-      - 5112:9001
-
-  azure:
-    image: mcr.microsoft.com/azure-storage/azurite
-    ports:
-      - 5107:10000
-
-  keycloak:
-    image: jboss/keycloak
-    environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: secret
-      DB_ADDR: ''
-      DB_VENDOR: h2
-    ports:
-      - 5110:8080
+      KEY: "934b60c01a41ceac06e62099135d0dedf2653302fb23d826"
+      SECRET: "b3c9d7849a96a3551ad597d4732f69a53cc3c45217a57305"
+      DB_CLIENT: maria
+      DB_HOST: mysql09.manitu.net
+      DB_PORT: 3306
+      DB_DATABASE: db90649
+      DB_USER: u90649
+      DB_PASSWORD: t4xy2xUQJJUrfWHS
+      ADMIN_EMAIL: "amp1enator@gmail.com"
+      ADMIN_PASSWORD: "MARiN3CaGLZ%jtMi3!5QJ7z"
